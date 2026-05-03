@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Robux Planet — Game Items Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #050810;
+      --surface: #080d1a;
+      --card: #0a1020;
+      --border: #1a2845;
+      --accent: #3b82f6;
+      --accent2: #60a5fa;
+      --accent3: #1d4ed8;
+      --text: #e8f0ff;
+      --muted: #5070a0;
+      --glow: 0 0 24px rgba(59,130,246,0.35);
+      --glow2: 0 0 24px rgba(96,165,250,0.35);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(8,11,16,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-shadow: var(--glow);
+      word-spacing: 8px;
+    }
+
+    .logo span { color: var(--accent2); }
+
+    nav ul {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      color: #fff !important;
+      padding: 0.45rem 1.2rem;
+      border-radius: 4px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem !important;
+      letter-spacing: 2px !important;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      overflow: hidden;
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .hero-orb.a {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(59,130,246,0.18), transparent 70%);
+      top: -100px; left: -100px;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .hero-orb.b {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(96,165,250,0.14), transparent 70%);
+      bottom: -80px; right: -80px;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+
+    .hero-orb.c {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(29,78,216,0.18), transparent 70%);
+      top: 50%; right: 20%;
+      animation: float 12s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.25);
+      border-radius: 2px;
+      padding: 0.35rem 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-family: 'Orbitron', monospace;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 .line1 { display: block; color: var(--text); }
+    h1 .line2 {
+      display: block;
+      background: linear-gradient(135deg, var(--accent), var(--accent3), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(0,212,255,0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(0,212,255,0.4);
+    }
+
+    .btn-secondary {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent);
+      display: block;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* DIVIDER */
+    .divider {
+      position: relative;
+      z-index: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 2rem;
+    }
+
+    /* SECTION */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    /* PRODUCT GRID */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    .product-card.hot { border-color: rgba(255,60,110,0.4); }
+    .product-card.hot:hover { border-color: var(--accent2); box-shadow: var(--glow2); }
+
+    .card-img {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      background: linear-gradient(135deg, #0d1117, #111820);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59,130,246,0.07), rgba(29,78,216,0.07));
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 2px;
+      z-index: 2;
+    }
+
+    .badge-hot { background: var(--accent2); color: #000; }
+    .badge-new { background: var(--accent); color: #fff; }
+    .badge-sale { background: #f59e0b; color: #000; }
+
+    .card-body { padding: 1.2rem; }
+
+    .card-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--accent);
+    }
+
+    .price.red { color: var(--accent2); }
+
+    .old-price {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: line-through;
+      margin-left: 0.4rem;
+    }
+
+    .btn-buy {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-buy:hover { opacity: 0.85; transform: scale(1.05); }
+    .btn-buy.red { background: linear-gradient(135deg, var(--accent2), var(--accent3)); }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .feature-card:hover { border-color: var(--accent3); }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .feature-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .feature-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer .logo { font-size: 1rem; }
+
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    footer p {
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 420px;
+      width: 90%;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .modal h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
+
+    .modal-btns { display: flex; gap: 1rem; }
+
+    .btn-close {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      padding: 0.65rem 1.2rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .btn-close:hover { border-color: var(--accent); }
+
+    .cart-btn {
+      position: relative;
+      background: rgba(176,96,255,0.1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 1.2rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .cart-btn:hover { border-color: var(--accent); box-shadow: var(--glow); }
+
+    .cart-count {
+      position: absolute;
+      top: -6px; right: -6px;
+      background: var(--accent2);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+
+    /* CART DRAWER */
+    .cart-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      z-index: 300;
+    }
+
+    .cart-overlay.open { display: block; }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0; right: 0;
+      width: 360px;
+      max-width: 95vw;
+      height: 100vh;
+      background: var(--card);
+      border-left: 1px solid var(--border);
+      z-index: 301;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .cart-overlay.open .cart-drawer { transform: translateX(0); }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-header h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      color: var(--accent);
+    }
+
+    .cart-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .cart-close:hover { color: var(--text); }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.5rem;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+
+    .cart-empty span { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+      animation: fadeUp 0.2s ease;
+    }
+
+    .cart-item-info { flex: 1; }
+
+    .cart-item-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .cart-item-price { font-size: 0.85rem; color: var(--accent); }
+
+    .cart-item-remove {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.3rem;
+      transition: color 0.2s;
+    }
+
+    .cart-item-remove:hover { color: var(--accent2); }
+
+    .cart-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .cart-total span:first-child { font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
+    .cart-total span:last-child { font-size: 1.2rem; color: var(--accent); font-weight: 700; }
+
+    .btn-checkout {
+      width: 100%;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-checkout:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-checkout:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent3); }
+
+    /* MARQUEE TICKER */
+    .marquee-wrap {
+      position: relative;
+      z-index: 1;
+      background: rgba(59,130,246,0.06);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 0.6rem 0;
+    }
+    .marquee-track {
+      display: flex;
+      animation: marquee 30s linear infinite;
+      width: max-content;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0 2.5rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: var(--muted);
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+    .marquee-item strong { color: var(--accent2); }
+    .marquee-dot { color: var(--accent); }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* PARTICLES */
+    #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0;
+      animation: particleFloat linear infinite;
+    }
+    @keyframes particleFloat {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.05; }
+      100% { transform: translateY(-100px) scale(1); opacity: 0; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: linear-gradient(135deg, var(--accent3), var(--accent));
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      box-shadow: var(--glow);
+      z-index: 999;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* HOW IT WORKS */
+    .how-section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .step:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .step-num {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent3), var(--accent));
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 900;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: var(--glow);
+    }
+    .step-title { font-family: 'Orbitron', monospace; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* REVIEWS */
+    .reviews-section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .review-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .review-card:hover { border-color: var(--accent2); }
+    .review-stars { color: #f59e0b; font-size: 1rem; margin-bottom: 0.75rem; letter-spacing: 2px; }
+    .review-text { font-size: 0.9rem; color: var(--text); line-height: 1.7; margin-bottom: 1rem; font-style: italic; opacity: 0.85; }
+    .review-author { display: flex; align-items: center; gap: 0.75rem; }
+    .review-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent3), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .review-name { font-family: 'Orbitron', monospace; font-size: 0.75rem; font-weight: 700; }
+    .review-date { font-size: 0.75rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Robux<span>Planet</span></div>
+  <ul>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#features">Why Us</a></li>
+  </ul>
+  <button class="cart-btn" onclick="toggleCart()">
+    🛒
+    <span class="cart-count" id="cart-count">0</span>
+  </button>
+</nav>
+
+<!-- TICKER -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Fast Delivery <strong>1-2 Days</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Trusted by <strong>90+ Players</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Rated <strong>4.8 Stars</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Europe Based <strong>EU Community</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Packages from <strong>$0.75</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Secure <strong>Transactions</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Fast Delivery <strong>1-2 Days</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Trusted by <strong>90+ Players</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Rated <strong>4.8 Stars</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Europe Based <strong>EU Community</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Packages from <strong>$0.75</strong></span>
+    <span class="marquee-item"><span class="marquee-dot">⬡</span> Secure <strong>Transactions</strong></span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-orb a"></div>
+  <div class="hero-orb b"></div>
+  <div class="hero-orb c"></div>
+
+  <div class="badge">🪐 Premium Roblox Marketplace</div>
+  <h1>
+    <span class="line1">Your Ultimate</span>
+    <span class="line2">Robux Store</span>
+  </h1>
+
+  <div class="hero-btns">
+    <a href="#shop" class="btn-primary">Browse Items</a>
+    <a href="#features" class="btn-secondary">Learn More</a>
+  </div>
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-num">100+</span>
+      <span class="stat-label">Items Sold</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">90+</span>
+      <span class="stat-label">Happy Players</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">4.8★</span>
+      <span class="stat-label">Rating</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SHOP -->
+<section id="shop">
+  <div class="section-label">// Marketplace</div>
+  <div class="section-title">Featured Items</div>
+  <p class="section-sub">Handpicked game passes, UGC collectibles & coaching from verified creators.</p>
+
+  <div class="products-grid">
+
+    <div class="product-card hot" onclick="openModal('Starter Pass', 'Get access to our Starter game pass. Perfect for new players looking to get a head start.')">
+      <div class="card-img">
+        🌟
+        <span class="card-badge badge-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">100 Robux</div>
+        
+        <div class="card-footer">
+          <div><span class="price">$0.75</span></div>
+          <button class="btn-buy">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="openModal('Bronze Pass', 'Unlock bronze-tier perks including 1.5x XP boost and exclusive bronze badge.')">
+      <div class="card-img">
+        🥉
+        <span class="card-badge badge-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">200 Robux</div>
+        
+        <div class="card-footer">
+          <div><span class="price">$1.50</span></div>
+          <button class="btn-buy">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="openModal('Silver Pass', 'Unlock silver-tier perks including 2x XP boost, exclusive skins and priority access.')">
+      <div class="card-img">
+        🥈
+
+      </div>
+      <div class="card-body">
+        <div class="card-title">500 Robux</div>
+        
+        <div class="card-footer">
+          <div><span class="price">$3.75</span></div>
+          <button class="btn-buy">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="openModal('Gold Pass', 'Premium gold-tier access with 3x XP, exclusive gold cosmetics and VIP server access.')">
+      <div class="card-img">🥇</div>
+      <div class="card-body">
+        <div class="card-title">1000 Robux</div>
+        
+        <div class="card-footer">
+          <div><span class="price">$7.00</span></div>
+          <button class="btn-buy">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card hot" onclick="openModal('Diamond Pass', 'Elite diamond-tier with 5x XP, rare diamond cosmetics, VIP perks and early access to new content.')">
+      <div class="card-img">
+        💎
+        <span class="card-badge badge-hot">HOT</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">2000 Robux</div>
+        
+        <div class="card-footer">
+          <div><span class="price red">$14.00</span></div>
+          <button class="btn-buy red">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card hot" onclick="openModal('Legend Pass', 'The ultimate game pass. Includes all perks, exclusive legend title, 10x XP and lifetime updates.')">
+      <div class="card-img">
+        👑
+        <span class="card-badge badge-hot">HOT</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">5000 Robux</div>
+        
+        <div class="card-footer">
+          <div><span class="price red">$36.00</span></div>
+          <button class="btn-buy red">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">// Why Choose Us</div>
+  <div class="section-title">Built for Players</div>
+  <p class="section-sub">Everything you need, nothing you don't.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <div class="feature-title">Secure Transactions</div>
+      <div class="feature-desc">All items are delivered through official Roblox systems. No account sharing ever required.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">✅</span>
+      <div class="feature-title">Verified Creators</div>
+      <div class="feature-desc">Every seller is vetted. Only legitimate UGC creators and game developers on our platform.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <div class="feature-title">Fast Delivery</div>
+      <div class="feature-desc">All orders delivered within 1-2 days. Quick and reliable every time.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🌍</span>
+      <div class="feature-title">Europe Community</div>
+      <div class="feature-desc">Based in Europe, serving the EU Roblox community with local support in multiple languages.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section" id="how">
+  <div class="section-label">// How It Works</div>
+  <div class="section-title">Simple as 1, 2, 3</div>
+  <p class="section-sub">Getting your Robux is quick and painless.</p>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Choose Package</div>
+      <div class="step-desc">Pick the Robux package that fits your needs and budget.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Place Order</div>
+      <div class="step-desc">Add to cart and complete your secure checkout in seconds.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Get Delivered</div>
+      <div class="step-desc">Receive your game pass within 1-2 days. Enjoy!</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- REVIEWS -->
+<div class="reviews-section">
+  <div class="section-label">// Reviews</div>
+  <div class="section-title">What Players Say</div>
+  <p class="section-sub">Real feedback from our community.</p>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Super fast delivery and great prices. Got my 1000 Robux package within a day. Highly recommend!</div>
+      <div class="review-author">
+        <div class="review-avatar">🎮</div>
+        <div>
+          <div class="review-name">xBlazeFire99</div>
+          <div class="review-date">2 days ago</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Best Robux store in Europe. Prices are unbeatable and the site is super easy to use.</div>
+      <div class="review-author">
+        <div class="review-avatar">🌟</div>
+        <div>
+          <div class="review-name">NovaPL_Gaming</div>
+          <div class="review-date">1 week ago</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★☆</div>
+      <div class="review-text">Bought the 5000 package and it arrived the next day. Very trustworthy, will buy again!</div>
+      <div class="review-author">
+        <div class="review-avatar">💎</div>
+        <div>
+          <div class="review-name">CrystalStar_EU</div>
+          <div class="review-date">2 weeks ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Robux<span>Planet</span></div>
+  <div class="footer-links">
+    <a href="#">Discord</a>
+  </div>
+  <p>© 2026 Robux Planet. Not affiliated with Roblox Corporation.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <h2 id="modal-title">Item Name</h2>
+    <p id="modal-desc">Item description goes here.</p>
+    <div class="modal-btns">
+      <button class="btn-buy" id="modal-add-btn">Add to Cart</button>
+      <button class="btn-close" onclick="closeModalDirect()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay" onclick="handleCartOverlayClick(event)">
+  <div class="cart-drawer">
+    <div class="cart-header">
+      <h2>🛒 Your Cart</h2>
+      <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">
+        <span>🪐</span>
+        Your cart is empty.<br>Add some Robux packages!
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>TOTAL</span>
+        <span id="cart-total">$0.00</span>
+      </div>
+      <button class="btn-checkout" id="checkout-btn" disabled onclick="alert('Checkout coming soon!')">CHECKOUT</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let cart = [];
+
+  function toggleCart() {
+    document.getElementById('cart-overlay').classList.toggle('open');
+  }
+
+  function handleCartOverlayClick(e) {
+    if (e.target === document.getElementById('cart-overlay')) toggleCart();
+  }
+
+  function addToCart(name, price) {
+    cart.push({ name, price, id: Date.now() });
+    updateCart();
+    document.getElementById('cart-overlay').classList.add('open');
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+  }
+
+  function updateCart() {
+    const container = document.getElementById('cart-items');
+    const countEl = document.getElementById('cart-count');
+    const totalEl = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    countEl.style.display = cart.length > 0 ? 'flex' : 'none';
+    countEl.textContent = cart.length;
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    totalEl.textContent = '$' + total.toFixed(2);
+    checkoutBtn.disabled = cart.length === 0;
+
+    if (cart.length === 0) {
+      container.innerHTML = '<div class="cart-empty"><span>🪐</span>Your cart is empty.<br>Add some Robux packages!</div>';
+      return;
+    }
+
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">🗑️</button>
+      </div>
+    `).join('');
+  }
+
+  function openModal(title, desc, price) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-desc').textContent = desc;
+    document.getElementById('modal').classList.add('open');
+    document.getElementById('modal-add-btn').onclick = () => {
+      addToCart(title, price);
+      closeModalDirect();
+    };
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.product-card, .feature-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.25s, box-shadow 0.25s';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
