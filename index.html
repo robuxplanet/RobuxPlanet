@@ -879,6 +879,331 @@
     }
     .review-name { font-family: 'Orbitron', monospace; font-size: 0.75rem; font-weight: 700; }
     .review-date { font-size: 0.75rem; color: var(--muted); }
+
+    /* SHOOTING STARS */
+    .shooting-star {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      animation: shoot linear forwards;
+    }
+    .shooting-star::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+      width: 80px; height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.6));
+      transform-origin: right center;
+    }
+    @keyframes shoot {
+      0%   { transform: translate(0,0) rotate(215deg); opacity: 1; }
+      100% { transform: translate(600px, 400px) rotate(215deg); opacity: 0; }
+    }
+
+    /* CARD SHINE SWEEP */
+    .product-card { position: relative; overflow: hidden; }
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.6s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .product-card:hover::before { left: 160%; }
+
+    /* RIPPLE */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(59,130,246,0.3);
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      pointer-events: none;
+      z-index: 10;
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* GLOWING PULSE on btn-primary */
+    .btn-primary {
+      animation: btnPulse 3s ease-in-out infinite;
+    }
+    @keyframes btnPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(59,130,246,0.3); }
+      50%       { box-shadow: 0 0 40px rgba(59,130,246,0.7), 0 0 80px rgba(59,130,246,0.2); }
+    }
+
+    /* LOGO SHIMMER */
+    .logo {
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent), var(--accent2));
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: logoShimmer 4s linear infinite;
+    }
+    @keyframes logoShimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 300% center; }
+    }
+
+    /* STAT NUMBER COUNT-UP (handled in JS) */
+    .stat-num { transition: color 0.3s; }
+
+    /* HERO TITLE TYPING CURSOR */
+    .line2::after {
+      content: '|';
+      display: inline-block;
+      color: var(--accent);
+      animation: blink 1s step-end infinite;
+      margin-left: 4px;
+      font-weight: 300;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* CARD BUY BUTTON RIPPLE + BOUNCE */
+    .btn-buy {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, opacity 0.2s;
+    }
+    .btn-buy:active { transform: scale(0.92); }
+
+    /* FEATURE CARD ICON BOUNCE */
+    .feature-card:hover .feature-icon {
+      display: inline-block;
+      animation: iconBounce 0.5s ease;
+    }
+    @keyframes iconBounce {
+      0%,100% { transform: translateY(0); }
+      40%      { transform: translateY(-8px); }
+      70%      { transform: translateY(-3px); }
+    }
+
+    /* STEP NUMBER SPIN ON HOVER */
+    .step:hover .step-num {
+      animation: spinOnce 0.5s ease;
+    }
+    @keyframes spinOnce {
+      from { transform: rotate(0deg) scale(1); }
+      50%  { transform: rotate(180deg) scale(1.2); }
+      to   { transform: rotate(360deg) scale(1); }
+    }
+
+    /* ANIMATED BORDER on product cards */
+    @keyframes borderGlow {
+      0%,100% { border-color: var(--border); }
+      50%      { border-color: rgba(59,130,246,0.5); }
+    }
+
+    /* GRID SCROLL ANIMATION */
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to   { background-position: 40px 40px; }
+    }
+    body::before { animation: gridMove 8s linear infinite; }
+
+    /* CURSOR TRAIL */
+    .cursor-dot {
+      position: fixed;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: opacity 0.3s;
+      box-shadow: 0 0 8px var(--accent);
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(59,130,246,0.5);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform 0.12s ease, width 0.2s, height 0.2s, border-color 0.2s;
+    }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent3), var(--accent));
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--glow);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); }
+    .back-to-top:hover { transform: translateY(-4px); }
+
+    /* ONLINE COUNTER */
+    .online-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 20px;
+      padding: 0.3rem 0.9rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      color: #4ade80;
+      margin-bottom: 1.2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .online-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 6px #4ade80;
+      animation: pulse 1.5s infinite;
+    }
+
+    /* DISCORD CTA BANNER */
+    .discord-banner {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      background: linear-gradient(135deg, #1e1150 0%, #0a1020 50%, #0e1a3a 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 3.5rem 2rem;
+      text-align: center;
+    }
+    .discord-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(88,101,242,0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .discord-banner h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
+    .discord-banner p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .btn-discord {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      padding: 0.9rem 2rem;
+      background: #5865f2;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 20px rgba(88,101,242,0.4);
+      position: relative;
+    }
+    .btn-discord:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 40px rgba(88,101,242,0.7);
+    }
+
+    /* PLANET DECORATION in hero */
+    .hero-planet {
+      position: absolute;
+      right: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #1e40af, #0f172a);
+      box-shadow: 0 0 60px rgba(59,130,246,0.3), inset -20px -20px 40px rgba(0,0,0,0.5);
+      animation: planetFloat 6s ease-in-out infinite;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+    .hero-planet::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: -30%;
+      width: 160%; height: 30%;
+      border-radius: 50%;
+      border: 2px solid rgba(59,130,246,0.3);
+      transform: translateY(-50%) rotateX(75deg);
+    }
+    .hero-planet::after {
+      content: '';
+      position: absolute;
+      inset: 15%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(96,165,250,0.2), transparent);
+    }
+    @keyframes planetFloat {
+      0%,100% { transform: translateY(-50%) rotate(0deg); }
+      50%      { transform: translateY(calc(-50% - 15px)) rotate(5deg); }
+    }
+    @media (max-width: 768px) { .hero-planet { display: none; } }
+
+    /* PRICE TAG HIGHLIGHT */
+    .price-highlight {
+      position: relative;
+    }
+    .price-highlight::after {
+      content: 'BEST VALUE';
+      position: absolute;
+      top: -20px; right: -10px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 1px;
+      background: #f59e0b;
+      color: #000;
+      padding: 2px 5px;
+      border-radius: 2px;
+      font-weight: 700;
+    }
+
+    /* FOOTER DISCORD LINK GLOW */
+    .footer-links a[href*="discord"] {
+      color: #5865f2;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+    }
+    .footer-links a[href*="discord"]:hover {
+      color: #7c8ff7;
+      text-shadow: 0 0 10px rgba(88,101,242,0.6);
+    }
+
   </style>
 </head>
 <body>
@@ -922,7 +1247,9 @@
   <div class="hero-orb a"></div>
   <div class="hero-orb b"></div>
   <div class="hero-orb c"></div>
+  <div class="hero-planet"></div>
 
+  <div class="online-pill"><span class="online-dot"></span> <span id="online-count">47</span> players online now</div>
   <div class="badge">🪐 Premium Roblox Marketplace</div>
   <h1>
     <span class="line1">Your Ultimate</span>
@@ -959,89 +1286,80 @@
 
   <div class="products-grid">
 
-    <div class="product-card hot" onclick="openModal('Starter Pass', 'Get access to our Starter game pass. Perfect for new players looking to get a head start.')">
+    <div class="product-card hot">
       <div class="card-img">
         🌟
         <span class="card-badge badge-new">NEW</span>
       </div>
       <div class="card-body">
         <div class="card-title">100 Robux</div>
-        
         <div class="card-footer">
           <div><span class="price">$0.75</span></div>
-          <button class="btn-buy">Buy Now</button>
+          <button class="btn-buy" onclick="addToCart('100 Robux', 0.75)">Buy Now</button>
         </div>
       </div>
     </div>
 
-    <div class="product-card" onclick="openModal('Bronze Pass', 'Unlock bronze-tier perks including 1.5x XP boost and exclusive bronze badge.')">
+    <div class="product-card">
       <div class="card-img">
         🥉
         <span class="card-badge badge-new">NEW</span>
       </div>
       <div class="card-body">
         <div class="card-title">200 Robux</div>
-        
         <div class="card-footer">
           <div><span class="price">$1.50</span></div>
-          <button class="btn-buy">Buy Now</button>
+          <button class="btn-buy" onclick="addToCart('200 Robux', 1.50)">Buy Now</button>
         </div>
       </div>
     </div>
 
-    <div class="product-card" onclick="openModal('Silver Pass', 'Unlock silver-tier perks including 2x XP boost, exclusive skins and priority access.')">
-      <div class="card-img">
-        🥈
-
-      </div>
+    <div class="product-card">
+      <div class="card-img">🥈</div>
       <div class="card-body">
         <div class="card-title">500 Robux</div>
-        
         <div class="card-footer">
           <div><span class="price">$3.75</span></div>
-          <button class="btn-buy">Buy Now</button>
+          <button class="btn-buy" onclick="addToCart('500 Robux', 3.75)">Buy Now</button>
         </div>
       </div>
     </div>
 
-    <div class="product-card" onclick="openModal('Gold Pass', 'Premium gold-tier access with 3x XP, exclusive gold cosmetics and VIP server access.')">
+    <div class="product-card">
       <div class="card-img">🥇</div>
       <div class="card-body">
         <div class="card-title">1000 Robux</div>
-        
         <div class="card-footer">
           <div><span class="price">$7.00</span></div>
-          <button class="btn-buy">Buy Now</button>
+          <button class="btn-buy" onclick="addToCart('1000 Robux', 7.00)">Buy Now</button>
         </div>
       </div>
     </div>
 
-    <div class="product-card hot" onclick="openModal('Diamond Pass', 'Elite diamond-tier with 5x XP, rare diamond cosmetics, VIP perks and early access to new content.')">
+    <div class="product-card hot">
       <div class="card-img">
         💎
         <span class="card-badge badge-hot">HOT</span>
       </div>
       <div class="card-body">
         <div class="card-title">2000 Robux</div>
-        
         <div class="card-footer">
           <div><span class="price red">$14.00</span></div>
-          <button class="btn-buy red">Buy Now</button>
+          <button class="btn-buy red" onclick="addToCart('2000 Robux', 14.00)">Buy Now</button>
         </div>
       </div>
     </div>
 
-    <div class="product-card hot" onclick="openModal('Legend Pass', 'The ultimate game pass. Includes all perks, exclusive legend title, 10x XP and lifetime updates.')">
+    <div class="product-card hot">
       <div class="card-img">
         👑
         <span class="card-badge badge-hot">HOT</span>
       </div>
       <div class="card-body">
         <div class="card-title">5000 Robux</div>
-        
         <div class="card-footer">
           <div><span class="price red">$36.00</span></div>
-          <button class="btn-buy red">Buy Now</button>
+          <button class="btn-buy red" onclick="addToCart('5000 Robux', 36.00)">Buy Now</button>
         </div>
       </div>
     </div>
@@ -1153,11 +1471,39 @@
 
 <div class="divider"></div>
 
+<!-- DISCORD CTA -->
+<div class="discord-banner">
+  <h2>💬 Join Our Community</h2>
+  <p>Get support, updates & exclusive deals on our Discord server.</p>
+  <div style="display:flex;gap:2rem;justify-content:center;margin-bottom:1.5rem;position:relative;">
+    <div style="text-align:center;">
+      <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:#5865f2;" id="discord-members">—</div>
+      <div style="font-size:0.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Members</div>
+    </div>
+    <div style="width:1px;background:var(--border);"></div>
+    <div style="text-align:center;">
+      <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:#4ade80;" id="discord-online">—</div>
+      <div style="font-size:0.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Online Now</div>
+    </div>
+  </div>
+  <a href="https://discord.gg/sD6MDbpm" target="_blank" class="btn-discord">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.113 18.1.132 18.11a19.898 19.898 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+    Join Discord
+  </a>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
 <!-- FOOTER -->
 <footer>
   <div class="logo">Robux<span>Planet</span></div>
   <div class="footer-links">
-    <a href="#">Discord</a>
+    <a href="https://discord.gg/sD6MDbpm" target="_blank">Discord</a>
   </div>
   <p>© 2026 Robux Planet. Not affiliated with Roblox Corporation.</p>
 </footer>
@@ -1183,7 +1529,7 @@
     </div>
     <div class="cart-items" id="cart-items">
       <div class="cart-empty">
-        <span>💰</span>
+        <span>🪐</span>
         Your cart is empty.<br>Add some Robux packages!
       </div>
     </div>
@@ -1192,13 +1538,14 @@
         <span>TOTAL</span>
         <span id="cart-total">$0.00</span>
       </div>
-      <button class="btn-checkout" id="checkout-btn" disabled onclick="alert('Checkout coming soon!')">CHECKOUT</button>
+      <button class="btn-checkout" id="checkout-btn" disabled onclick="window.open('https://discord.gg/sD6MDbpm', '_blank')">CHECKOUT</button>
     </div>
   </div>
 </div>
 
 <script>
   let cart = [];
+  let toastTimer = null;
 
   function toggleCart() {
     document.getElementById('cart-overlay').classList.toggle('open');
@@ -1208,10 +1555,18 @@
     if (e.target === document.getElementById('cart-overlay')) toggleCart();
   }
 
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
   function addToCart(name, price) {
     cart.push({ name, price, id: Date.now() });
     updateCart();
-    document.getElementById('cart-overlay').classList.add('open');
+    showToast('✓ ' + name + ' added to cart!');
   }
 
   function removeFromCart(id) {
@@ -1248,22 +1603,137 @@
     `).join('');
   }
 
-  function openModal(title, desc, price) {
-    document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-desc').textContent = desc;
-    document.getElementById('modal').classList.add('open');
-    document.getElementById('modal-add-btn').onclick = () => {
-      addToCart(title, price);
-      closeModalDirect();
-    };
-  }
-
   function closeModal(e) {
     if (e.target === document.getElementById('modal')) closeModalDirect();
   }
 
   function closeModalDirect() {
     document.getElementById('modal').classList.remove('open');
+  }
+
+  // Discord live member count via CORS proxy
+  fetch('https://corsproxy.io/?https://discord.com/api/v9/invites/sD6MDbpm?with_counts=true')
+    .then(r => r.json())
+    .then(data => {
+      const total = data.approximate_member_count;
+      const online = data.approximate_presence_count;
+      const el = document.getElementById('discord-members');
+      const onlineEl = document.getElementById('discord-online');
+      if (el && total) el.textContent = total.toLocaleString();
+      if (onlineEl && online) onlineEl.textContent = online.toLocaleString();
+    })
+    .catch(() => {
+      // Fallback if proxy fails
+      const el = document.getElementById('discord-members');
+      const onlineEl = document.getElementById('discord-online');
+      if (el) el.textContent = '—';
+      if (onlineEl) onlineEl.textContent = '—';
+    });
+
+  // Cursor trail
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+  (function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(animRing);
+  })();
+  document.querySelectorAll('button, a, .product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width='44px'; ring.style.height='44px'; ring.style.borderColor='rgba(59,130,246,0.8)'; });
+    el.addEventListener('mouseleave', () => { ring.style.width='28px'; ring.style.height='28px'; ring.style.borderColor='rgba(59,130,246,0.5)'; });
+  });
+
+  // Back to top
+  const btt = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => { btt.classList.toggle('visible', window.scrollY > 400); });
+
+  // Online counter simulation
+  const onlineEl = document.getElementById('online-count');
+  let baseCount = 40 + Math.floor(Math.random() * 20);
+  setInterval(() => {
+    baseCount += Math.floor(Math.random() * 5) - 2;
+    baseCount = Math.max(30, Math.min(80, baseCount));
+    onlineEl.textContent = baseCount;
+  }, 4000);
+  function spawnStar() {
+    const star = document.createElement('div');
+    star.className = 'shooting-star';
+    star.style.cssText = `
+      top: ${Math.random() * 60}%;
+      left: ${Math.random() * 60}%;
+      animation-duration: ${Math.random() * 1 + 0.8}s;
+      animation-delay: 0s;
+    `;
+    document.body.appendChild(star);
+    setTimeout(() => star.remove(), 2000);
+  }
+  setInterval(spawnStar, 3000);
+  setTimeout(spawnStar, 500);
+
+  // Ripple on buy buttons
+  document.querySelectorAll('.btn-buy').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      const r = document.createElement('span');
+      r.className = 'ripple';
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+      btn.appendChild(r);
+      setTimeout(() => r.remove(), 700);
+    });
+  });
+
+  // Animated stat counters
+  function animateCount(el, target, suffix) {
+    let start = 0;
+    const duration = 1800;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  const statsObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const nums = entry.target.querySelectorAll('.stat-num');
+        nums.forEach(n => {
+          const txt = n.textContent;
+          if (txt.includes('100')) animateCount(n, 100, '+');
+          else if (txt.includes('90')) animateCount(n, 90, '+');
+          else if (txt.includes('4.8')) {
+            n.textContent = '0★';
+            let v = 0;
+            const t = setInterval(() => { v = Math.min(v + 0.1, 4.8); n.textContent = v.toFixed(1) + '★'; if (v >= 4.8) clearInterval(t); }, 40);
+          }
+        });
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const statsEl = document.querySelector('.stats');
+  if (statsEl) statsObserver.observe(statsEl);
+  const particleContainer = document.getElementById('particles');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${Math.random() * 15 + 10}s;
+      animation-delay: ${Math.random() * 10}s;
+      opacity: 0;
+    `;
+    particleContainer.appendChild(p);
   }
 
   // Scroll reveal
@@ -1276,12 +1746,15 @@
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.product-card, .feature-card').forEach(el => {
+  document.querySelectorAll('.product-card, .feature-card, .step, .review-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.25s, box-shadow 0.25s';
     observer.observe(el);
   });
 </script>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 </body>
 </html>
